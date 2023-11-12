@@ -83,12 +83,34 @@ def main_keys():
     markup = types.ReplyKeyboardMarkup(row_width=True, resize_keyboard=True)
     btn = types.KeyboardButton(text=translate('universities', 'ru'))
     btn1 = types.KeyboardButton(text=translate('online_courses', 'ru'))
-    btn2 = types.KeyboardButton(text=translate('prof_orientation', 'ru'), web_app=WebAppInfo(url='https://master--marvelous-pika-08cf9e.netlify.app/?ru'))
+    btn2 = types.KeyboardButton(text=translate('prof_orientation', 'ru'),
+                                web_app=WebAppInfo(url='https://master--marvelous-pika-08cf9e.netlify.app/?ru'))
     markup.add(btn)
     markup.add(btn1)
     markup.add(btn2)
     return markup
 
+
+designUnis = [
+    f"{university[2]['name']}",
+    f"{university[3]['name']}",
+    f"{university[6]['name']}",
+    f"{university[4]['name']}",
+]
+
+softUnis = [
+    f"{university[0]['name']}",
+    f"{university[1]['name']}",
+    f"{university[7]['name']}",
+    f"{university[6]['name']}",
+]
+
+marketingUnis = [
+    f"{university[5]['name']}",
+    f"{university[8]['name']}",
+    f"{university[10]['name']}",
+    f"{university[7]['name']}",
+]
 
 designUniversities = [
     f"{university[2]['name']}\nAcceptance : {university[2]['acceptance']}\nGraduation rate : {university[2]['graduate_rate']}\nAverage salary : {university[2]['average_salary']}",
@@ -97,7 +119,6 @@ designUniversities = [
     f"{university[4]['name']}\nAcceptance : {university[4]['acceptance']}\nGraduation rate : {university[4]['graduate_rate']}\nAverage salary : {university[4]['average_salary']}",
 ]
 
-
 softwareUniversities = [
     f"{university[0]['name']}\nAcceptance : {university[0]['acceptance']}\nGraduation rate : {university[0]['graduate_rate']}\nAverage salary : {university[0]['average_salary']}",
     f"{university[1]['name']}\nAcceptance : {university[1]['acceptance']}\nGraduation rate : {university[1]['graduate_rate']}\nAverage salary : {university[1]['average_salary']}",
@@ -105,13 +126,17 @@ softwareUniversities = [
     f"{university[6]['name']}\nAcceptance : {university[6]['acceptance']}\nGraduation rate : {university[6]['graduate_rate']}\nAverage salary : {university[6]['average_salary']}",
 ]
 
-
 marketingUniversities = [
     f"{university[5]['name']}\nAcceptance : {university[5]['acceptance']}\nGraduation rate : {university[5]['graduate_rate']}\nAverage salary : {university[5]['average_salary']}",
     f"{university[8]['name']}\nAcceptance : {university[8]['acceptance']}\nGraduation rate : {university[8]['graduate_rate']}\nAverage salary : {university[8]['average_salary']}",
     f"{university[10]['name']}\nAcceptance : {university[10]['acceptance']}\nGraduation rate : {university[10]['graduate_rate']}\nAverage salary : {university[10]['average_salary']}",
-    f"{university[8]['name']}\nAcceptance : {university[8]['acceptance']}\nGraduation rate : {university[8]['graduate_rate']}\nAverage salary : {university[8]['average_salary']}",
+    f"{university[7]['name']}\nAcceptance : {university[7]['acceptance']}\nGraduation rate : {university[7]['graduate_rate']}\nAverage salary : {university[7]['average_salary']}",
 ]
 
+uzbUnis = [
+
+]
+
+rusUnis = []
 
 users = {}
