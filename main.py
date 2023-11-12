@@ -1,11 +1,10 @@
-from random import random
-
 from telebot import TeleBot
 from telebot import types
 from repository.lang import translate
 from repository.data import main_keys, university
 import service.survey_result
 import repository.data
+import random
 
 TOKEN = "6931512974:AAH7oux6l4Hd7B30zqfGTWSB9GoXmfscCTw"
 
@@ -13,11 +12,10 @@ bot = TeleBot(TOKEN)
 
 university = university
 
-state = ''
-
 
 @bot.message_handler(commands=["start"])
 def start(message):
+    repository.data.users[message.from_user.id] = ['ru', '']
     markup = types.InlineKeyboardMarkup(row_width=True)
     btn1 = types.InlineKeyboardButton(text='Русский язык🇷🇺', callback_data='ru')
     btn2 = types.InlineKeyboardButton(text="O'zbek tili🇺🇿", callback_data='uz')
@@ -29,11 +27,19 @@ def start(message):
 @bot.callback_query_handler(func=lambda call: True)
 def handle_callback(call):
     user_id = call.from_user.id
-    markup = main_keys()
+    lang = repository.data.users[call.from_user.id][0]
+    print(repository.data.users)
     res = ''
     inline_keys = types.InlineKeyboardMarkup()
-    if call.data == 'ru' or call.data == 'uz':
+    if call.data == 'ru':
+        repository.data.users[call.from_user.id] = ['ru', '']
+        markup = main_keys('ru')
         bot.send_message(user_id, translate('choose_option', 'ru'), reply_markup=markup)
+        return
+    elif call.data == 'uz':
+        repository.data.users[call.from_user.id] = ['uz', '']
+        markup = main_keys('uz')
+        bot.send_message(user_id, translate('choose_option', 'uz'), reply_markup=markup)
         return
     elif call.data == 'prog_k':
         res = '''
@@ -147,22 +153,22 @@ def handle_callback(call):
         dt = str(call.data).split('|')
         if dt[1] == 'soft':
             inline_keys.add(
-                types.InlineKeyboardButton(text=translate('know_chances', 'ru'), callback_data='uni_chances|soft'))
-            res += translate('unis_for_soft', 'ru')
-            for i in repository.data.softwareUniversities:
+                types.InlineKeyboardButton(text=translate('know_chances', lang), callback_data='uni_chances|soft'))
+            res += translate('unis_for_soft', lang)
+            for i in repository.data.softwareUniversities(lang):
                 res += i
         elif dt[1] == 'design':
             inline_keys.add(
-                types.InlineKeyboardButton(text=translate('know_chances', 'ru'), callback_data='uni_chances|design'))
+                types.InlineKeyboardButton(text=translate('know_chances', lang), callback_data='uni_chances|design'))
 
-            res += translate('unis_for_design', 'ru')
-            for i in repository.data.designUniversities:
+            res += translate('unis_for_design', lang)
+            for i in repository.data.designUniversities(lang):
                 res += i
         elif dt[1] == 'marketing':
             inline_keys.add(
-                types.InlineKeyboardButton(text=translate('know_chances', 'ru'), callback_data='uni_chances|marketing'))
-            res += translate('unis_for_marketing', 'ru')
-            for i in repository.data.marketingUniversities:
+                types.InlineKeyboardButton(text=translate('know_chances', lang), callback_data='uni_chances|marketing'))
+            res += translate('unis_for_marketing', lang)
+            for i in repository.data.marketingUniversities(lang):
                 res += i
     elif str(call.data).split('|')[0] == 'online_courses':
         dt = str(call.data).split('|')
@@ -277,7 +283,7 @@ def handle_callback(call):
                     URL: [Social Media Coordinator Jobs on Glassdoor](https://www.glassdoor.com/Job/social-media-coordinator-jobs-SRCH_KO0,24.htm)
                     '''
     elif str(call.data).split('|')[0] == 'uni_chances':
-        res = translate('choose_uni', 'ru')
+        res = translate('choose_uni', lang)
         dt = str(call.data).split('|')[1]
         if dt == 'soft':
             for i in repository.data.softUnis:
@@ -291,9 +297,16 @@ def handle_callback(call):
             for i in repository.data.marketingUnis:
                 btn = types.InlineKeyboardButton(text=i, callback_data=i)
                 inline_keys.add(btn)
-    elif call.data in repository.data.softUnis:
-        pass
+    elif call.data in repository.data.uzbUnis:
+        print(call.data)
+        repository.data.users[call.from_user.id][1] = 'dtm'
+        res = translate("type_dtm_score", lang)
+    elif call.data in repository.data.rusUnis:
+        print(call.data)
+        repository.data.users[call.from_user.id][1] = 'ege'
+        res = translate('type_ege_score', lang)
     else:
+        print(call.data)
         res = "No information available"
 
     bot.send_message(call.message.chat.id, res, parse_mode='Markdown', reply_markup=inline_keys)
@@ -301,72 +314,77 @@ def handle_callback(call):
 
 @bot.message_handler(content_types=['text'])
 def handle_messages(message: types.Message):
-    if message.text == translate('universities', 'ru'):
-        pass
-    elif message.text == translate('online_courses', 'ru'):
+    print(message.chat.id)
+    print(message.from_user.id)
+    print(repository.data.users)
+    lang = repository.data.users[message.from_user.id][0]
+    state = repository.data.users[message.from_user.id][1]
+    if state == 'dtm':
+        try:
+            score1 = int(message.text)
+            if 100 <= score1 <= 150:
+                chance = random.randint(65, 70)
+                bot.send_message(message.chat.id, f'{translate("your_chances", lang)} : {str(chance)}%')
+            elif score1 >= 151:
+                chance = random.randint(73, 90)
+                bot.send_message(message.chat.id, f'{translate("your_chances", lang)} : {str(chance)}%')
+            else:
+                bot.send_message(message.chat.id, translate("your_chances_low", lang))
+        except Exception as e:
+            print(e)
+            bot.send_message(message.chat.id, translate('enter_numbers', lang))
+    elif state == 'ege':
+        try:
+            score1 = int(message.text)
+            print(score1)
+            if 70 <= score1 <= 78:
+                chance = random.randint(65, 70)
+                bot.send_message(message.chat.id, f'{translate("your_chances", lang)} : {str(chance)}%')
+            elif score1 > 78:
+                chance = random.randint(73, 85)
+                bot.send_message(message.chat.id, f'{translate("your_chances", lang)} : {str(chance)}%')
+            else:
+                bot.send_message(message.chat.id, 'ERROR')
+        except Exception as e:
+            print(e)
+            bot.send_message(message.chat.id, translate('enter_numbers', lang))
+    elif message.text == translate('universities', lang):
+        lst = ''
+        for i in repository.data.university:
+            lst += f"{i['name']}\n{translate('acceptance', lang)}: {i['acceptance']}\n{translate('graduation_rate', lang)}: {i['graduate_rate']}\n{translate('average_salary', lang)}: {i['average_salary']}\n{translate('link', lang)}: {i['link']}\n\n"
+        bot.send_message(message.chat.id, str(lst))
+    elif message.text == translate('online_courses', lang):
         markup = types.InlineKeyboardMarkup()
-        item1 = types.InlineKeyboardButton(translate('soft_courses', 'ru'), callback_data='prog_k')
-        item2 = types.InlineKeyboardButton(translate('design_courses', 'ru'), callback_data='design_k')
-        item3 = types.InlineKeyboardButton(translate('marketing_courses', 'ru'), callback_data='market_k')
+        item1 = types.InlineKeyboardButton(translate('soft_courses', lang), callback_data='prog_k')
+        item2 = types.InlineKeyboardButton(translate('design_courses', lang), callback_data='design_k')
+        item3 = types.InlineKeyboardButton(translate('marketing_courses', lang), callback_data='market_k')
         markup.row(item1)
         markup.row(item2)
         markup.row(item3)
-        bot.send_message(message.chat.id, translate('choose_course', 'ru'), reply_markup=markup)
-    elif message.text == translate('prof_orientation', 'ru'):
+        bot.send_message(message.chat.id, translate('choose_course', lang), reply_markup=markup)
+    elif message.text == translate('prof_orientation', lang):
         user_id = message.from_user.id
-        bot.send_message(user_id, translate('prof_info', 'ru'))
+        bot.send_message(user_id, translate('prof_info', lang))
 
 
 @bot.message_handler(content_types=['web_app_data'])
 def survey_result(web_mess):
+    lang = repository.data.users[web_mess.from_user.id][0]
     print(web_mess)
     print(web_mess.web_app_data.data)
     a = web_mess.web_app_data.data.split(', ')[0]
     b = web_mess.web_app_data.data.split(', ')[1]
     c = web_mess.web_app_data.data.split(', ')[2]
     data = service.survey_result.calculatePercent(a, b, c)
-    res = service.survey_result.show_percent(data[0], data[1], data[2])
+    res = service.survey_result.show_percent(data[0], data[1], data[2], web_mess.from_user.id)
     markup = types.InlineKeyboardMarkup()
-    btn1 = types.InlineKeyboardButton(text=translate('universities', 'ru'), callback_data=f'universities|{res[1]}')
-    btn2 = types.InlineKeyboardButton(text=translate('online_courses', 'ru'), callback_data=f'online_courses|{res[1]}')
-    btn3 = types.InlineKeyboardButton(text=translate('jobs', 'ru'), callback_data=f'jobs|{res[1]}')
+    btn1 = types.InlineKeyboardButton(text=translate('universities', lang), callback_data=f'universities|{res[1]}')
+    btn2 = types.InlineKeyboardButton(text=translate('online_courses', lang), callback_data=f'online_courses|{res[1]}')
+    btn3 = types.InlineKeyboardButton(text=translate('jobs', lang), callback_data=f'jobs|{res[1]}')
     markup.add(btn1)
     markup.add(btn2)
     markup.add(btn3)
     bot.send_message(web_mess.chat.id, res[0], reply_markup=markup)
-
-
-@bot.callback_query_handler(func=lambda call: True)
-def software(call):
-    uzb_list = ['inha', 'itpark', 'national_uni', 'intertech', 'agrar', 'economics']
-    if call.data in uzb_list:
-        state = "DTM"
-        bot.send_message(call.message.chat.id, 'DTM : ')
-
-    else:
-        rus_list = ['itmo', 'kazan', 'research_uni', 'lomonosov']
-        if call.data in rus_list:
-            state = "ege"
-            bot.send_message(call.message.chat.id, 'ЕГЭ : ')
-
-
-@bot.message_handler(content_types=['text'])
-def score(message):
-    num = int(message.text)
-    if state == 'DTM':
-        if 100 <= num <= 150:
-            bot.send_message(message.chat.id, f'KIRISH SHANSINGIZ : {random.randint(61, 70)}')
-        elif num >= 151:
-            bot.send_message(message.chat.id, f'KIRISH SHANSINGIZ : {random.randint(73, 90)}')
-        else:
-            bot.send_message(message.chat.id, 'ERROR')
-    elif state == 'ege':
-        if 70 <= num <= 78:
-            bot.send_message(message.chat.id, f'KIRISH SHANSINGIZ : {random.randint(61, 70)}')
-        elif num > 78:
-            bot.send_message(message.chat.id, f'KIRISH SHANSINGIZ : {random.randint(73, 85)}')
-        else:
-            bot.send_message(message.chat.id, 'ERROR')
 
 
 if __name__ == '__main__':

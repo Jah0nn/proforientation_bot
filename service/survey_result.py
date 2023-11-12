@@ -1,4 +1,5 @@
 from repository.lang import translate
+import repository
 
 
 def calculatePercent(a, b, c):
@@ -10,7 +11,8 @@ def calculatePercent(a, b, c):
     return res
 
 
-def show_percent(sp, dp, mp):
+def show_percent(sp, dp, mp, user_id):
+    lang = repository.data.users[user_id][0]
     res = ''
     job = ''
     lst = [sp, dp, mp]
@@ -31,10 +33,10 @@ def show_percent(sp, dp, mp):
     print(lst1)
     for i in lst1:
         if i == sp:
-            res += f'{translate("comp_soft","ru")}:{sp}\n'
+            res += f'{translate("comp_soft", lang)}:{sp}\n'
         elif i == dp:
-            res += f'{translate("comp_design","ru")}:{dp}\n'
+            res += f'{translate("comp_design", lang)}:{dp}\n'
         else:
-            res += f'{translate("comp_mark","ru")}:{mp}\n'
+            res += f'{translate("comp_mark", lang)}:{mp}\n'
     return [res, job]
 
