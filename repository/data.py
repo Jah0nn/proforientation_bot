@@ -26,25 +26,25 @@ university = [
         "link": "https://nuu.uz/"
     },
     {
-        'name': 'TASHKENT UNIVERSITY OF INTERNATION TECHNOLOGIES',
+        'name': 'TASHKENT UNIVERSITY OF INFORMATION TECHNOLOGIES',
         'acceptance': '33%',
         'graduate_rate': '83%',
         'average_salary': '$31000',
-        "link": "https://nuu.uz/"
+        "link": "https://tuit.uz/"
     },
     {
         'name': 'TASHKENT STATE AGRARIAN UNIVERSITY',
         'acceptance': '18%',
         'graduate_rate': '15%',
         'average_salary': '$23500',
-        "link": "https://nuu.uz/",
+        "link": "https://tdau.uz/",
     },
     {
         'name': 'TASHKENT STATE UNIVERSITY OF ECONOMICS',
         'acceptance': '43%',
         'graduate_rate': '36%',
         'average_salary': '$23500',
-        "link": "https://nuu.uz/",
+        "link": "https://tsue.uz/",
     },
     {
         'name': 'KHAZAN FEDERAL UNIVERSITY',

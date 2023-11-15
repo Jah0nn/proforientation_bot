@@ -241,46 +241,46 @@ def handle_callback(call):
     elif str(call.data).split('|')[0] == 'jobs':
         dt = str(call.data).split('|')
         if dt[1] == 'soft':
-            res = '''
-                    Job: "Software Developer"
-                    Description: Develop and maintain software applications using programming languages like Python, Java, or JavaScript.
-                    URL: [Software Developer Jobs on Indeed](https://www.indeed.com/q-Software-Developer-jobs.html)
+            res = f'''
+                    {translate('job', lang)}: "Software Developer"
+                    {translate('description', lang)}: Develop and maintain software applications using programming languages like Python, Java, or JavaScript.
+                    {translate('link', lang)}: [Software Developer Jobs on Indeed](https://www.indeed.com/q-Software-Developer-jobs.html)
 
-                    Job: "Data Scientist"
-                    Description: Analyze and interpret complex data sets to inform business decision-making.
-                    URL: [Data Scientist Jobs on LinkedIn](https://www.linkedin.com/jobs/data-scientist-jobs/)
+                    {translate('job', lang)}: "Data Scientist"
+                    {translate('description', lang)}: Analyze and interpret complex data sets to inform business decision-making.
+                    {translate('link', lang)}: [Data Scientist Jobs on LinkedIn](https://www.linkedin.com/jobs/data-scientist-jobs/)
 
-                    Job: "Web Developer"
-                    Description: Design and implement web applications using HTML, CSS, and JavaScript.
-                    URL: [Web Developer Jobs on Glassdoor](https://www.glassdoor.com/Job/web-developer-jobs-SRCH_KO0,12.htm)
+                    {translate('job', lang)}: "Web Developer"
+                    {translate('design', lang)}: Design and implement web applications using HTML, CSS, and JavaScript.
+                    {translate('link', lang)}: [Web Developer Jobs on Glassdoor](https://www.glassdoor.com/Job/web-developer-jobs-SRCH_KO0,12.htm)
                     '''
         elif dt[1] == 'design':
-            res = '''
-                    Job: "Graphic Designer"
-                    Description: Create visual concepts using computer software or by hand to communicate ideas that inspire, inform, and captivate consumers.
-                    URL: [Graphic Designer Jobs on SimplyHired](https://www.simplyhired.com/search?q=graphic+designer)
+            res = f'''
+                    {translate('job', lang)}: "Graphic Designer"
+                    {translate('description', lang)}: Create visual concepts using computer software or by hand to communicate ideas that inspire, inform, and captivate consumers.
+                    {translate('link', lang)}: [Graphic Designer Jobs on SimplyHired](https://www.simplyhired.com/search?q=graphic+designer)
 
-                    Job: "UX/UI Designer"
-                    Description: Design user experiences and user interfaces for digital products, ensuring a seamless and visually appealing interaction.
-                    URL: [UX/UI Designer Jobs on Monster](https://www.monster.com/jobs/q-ux-ui-designer-jobs.aspx)
+                    {translate('job', lang)}: "UX/UI Designer"
+                    {translate('description', lang)}: Design user experiences and user interfaces for digital products, ensuring a seamless and visually appealing interaction.
+                    {translate('link', lang)}: [UX/UI Designer Jobs on Monster](https://www.monster.com/jobs/q-ux-ui-designer-jobs.aspx)
 
-                    Job: "Motion Graphics Designer"
-                    Description: Create animated graphics and visual effects for video content.
-                    URL: [Motion Graphics Designer Jobs on Creativepool](https://creativepool.com/jobs/motion-graphics-designer)
+                    {translate('job', lang)}: "Motion Graphics Designer"
+                    {translate('description', lang)}: Create animated graphics and visual effects for video content.
+                    {translate('link', lang)}: [Motion Graphics Designer Jobs on Creativepool](https://creativepool.com/jobs/motion-graphics-designer)
                     '''
         elif dt[1] == 'marketing':
-            res = '''
-                    Job: "Digital Marketing Specialist"
-                    Description: Plan and execute digital marketing campaigns, including SEO, social media, and email marketing.
-                    URL: [Digital Marketing Specialist Jobs on Indeed](https://www.indeed.com/q-Digital-Marketing-Specialist-jobs.html)
+            res = f'''
+                    {translate('job', lang)}: "Digital Marketing Specialist"
+                    {translate('description', lang)}: Plan and execute digital marketing campaigns, including SEO, social media, and email marketing.
+                    {translate('link', lang)}: [Digital Marketing Specialist Jobs on Indeed](https://www.indeed.com/q-Digital-Marketing-Specialist-jobs.html)
 
-                    Job: "Content Marketing Manager"
-                    Description: Develop and implement content marketing strategies to drive brand awareness and customer engagement.
-                    URL: [Content Marketing Manager Jobs on LinkedIn](https://www.linkedin.com/jobs/content-marketing-manager-jobs/)
+                    {translate('job', lang)}: "Content Marketing Manager"
+                    {translate('description', lang)}: Develop and implement content marketing strategies to drive brand awareness and customer engagement.
+                    {translate('link', lang)}: [Content Marketing Manager Jobs on LinkedIn](https://www.linkedin.com/jobs/content-marketing-manager-jobs/)
 
-                    Job: "Social Media Coordinator"
-                    Description: Manage and create content for social media platforms to enhance brand presence and engage with the audience.
-                    URL: [Social Media Coordinator Jobs on Glassdoor](https://www.glassdoor.com/Job/social-media-coordinator-jobs-SRCH_KO0,24.htm)
+                    {translate('job', lang)}: "Social Media Coordinator"
+                    {translate('description', lang)}: Manage and create content for social media platforms to enhance brand presence and engage with the audience.
+                    {translate('link', lang)}: [Social Media Coordinator Jobs on Glassdoor](https://www.glassdoor.com/Job/social-media-coordinator-jobs-SRCH_KO0,24.htm)
                     '''
     elif str(call.data).split('|')[0] == 'uni_chances':
         res = translate('choose_uni', lang)
@@ -319,14 +319,19 @@ def handle_messages(message: types.Message):
     print(repository.data.users)
     lang = repository.data.users[message.from_user.id][0]
     state = repository.data.users[message.from_user.id][1]
+    print(state)
     if state == 'dtm':
         try:
             score1 = int(message.text)
             if 100 <= score1 <= 150:
                 chance = random.randint(65, 70)
+                repository.data.users[message.from_user.id][1] = ''
+                print(repository.data.users[message.from_user.id][1])
                 bot.send_message(message.chat.id, f'{translate("your_chances", lang)} : {str(chance)}%')
             elif score1 >= 151:
                 chance = random.randint(73, 90)
+                repository.data.users[message.from_user.id][1] = ''
+
                 bot.send_message(message.chat.id, f'{translate("your_chances", lang)} : {str(chance)}%')
             else:
                 bot.send_message(message.chat.id, translate("your_chances_low", lang))
@@ -339,9 +344,11 @@ def handle_messages(message: types.Message):
             print(score1)
             if 70 <= score1 <= 78:
                 chance = random.randint(65, 70)
+                repository.data.users[message.from_user.id][1] = ''
                 bot.send_message(message.chat.id, f'{translate("your_chances", lang)} : {str(chance)}%')
             elif score1 > 78:
                 chance = random.randint(73, 85)
+                repository.data.users[message.from_user.id][1] = ''
                 bot.send_message(message.chat.id, f'{translate("your_chances", lang)} : {str(chance)}%')
             else:
                 bot.send_message(message.chat.id, 'ERROR')

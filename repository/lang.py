@@ -29,13 +29,15 @@ uzb_lang = {
     "type_dtm_score": "DTM balini kiriting:",
     "type_ege_score": "ЕГЭ balini kiriting:",
     "your_chances": "Qabul qilinishingiz imkoniyati:",
-    "your_chances_low": "Sizning imkoniyatingiz 30 dan kam%",
+    "your_chances_low": "Sizning imkoniyatingiz 30% dan kam",
     "enter_numbers": "Faqat raqamlardan foydalaning",
     'name': 'Nomi',
     'acceptance': 'Qabul qilish foyizi',
     'graduation_rate': 'Yakunlash foyizi',
     'average_salary': 'Ortacha oylik',
     'link': 'Link',
+    "job": "Ish",
+    "description": "Tavsifi"
 }
 
 rus_lang = {
@@ -69,4 +71,6 @@ rus_lang = {
     "graduation_rate": "Процент оканчивания",
     "average_salary": "Средняя зарплата",
     "link": "Ссылка",
+    "job": "Работа",
+    "description": "Описание"
 }
